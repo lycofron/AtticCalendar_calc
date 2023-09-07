@@ -1,0 +1,5 @@
+*.o
+ephe/**
+lib/**
+sweph/**
+solarcalc
