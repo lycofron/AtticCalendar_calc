@@ -1,6 +1,7 @@
 #ifndef _ATTIC_CALENDAR_COMMON_INCLUDED
 #define _ATTIC_CALENDAR_COMMON_INCLUDED
 
+extern char EPHE_PATH[];
 extern double VOID_OBSERVER[6];
 
 void formatJulianDate(double jd, char * stringBuffer);

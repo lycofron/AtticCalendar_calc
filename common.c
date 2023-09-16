@@ -4,6 +4,7 @@
 #include "athens.h"
 
 double VOID_OBSERVER[] = {36.0,1.0,0.0,0.0,0.0,0.0};
+char EPHE_PATH[] = "./ephe/";
 
 void formatJulianDate(double jd, char * stringBuffer){
     // Format Julian date as follows:

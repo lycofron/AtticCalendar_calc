@@ -80,7 +80,7 @@ double getApparentSolsticeDate(double jd_initial){
 int main()
 {
     // Initialization
-    swe_set_ephe_path("./ephe/");
+    swe_set_ephe_path(EPHE_PATH);
     swe_set_topo(ATHENS_LONGITUDE, ATHENS_LATITUDE, ATHENS_ALTITUDE);
 
     /* Parameters */
