@@ -12,7 +12,7 @@ CC=cc	#for Linux
 all:	solarcalc
 
 solarcalc: solarcalc.o
-	$(CC) $(OP) -o solarcalc solarcalc.o -Llib/ -lswe -lm -ldl
+	$(CC) $(OP) -o solarcalc solarcalc.c common.c athens.c -Llib/ -lswe -lm -ldl
 
 clean:
 	rm -f *.o solarcalc

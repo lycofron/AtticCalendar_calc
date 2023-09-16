@@ -14,39 +14,13 @@ In detail, the program will scan in the range between startud and stoput and wil
 * Midnight of attic day when topocentric apparent solstice occurs.
 
 ***********************************************************************************************************************************/
-
-
 #include <math.h>
 #include <stdbool.h>
 #include "swephexp.h" 	/* this includes  "sweodef.h" */
-
-const double ATHENS_LONGITUDE = 23.7268;
-const double ATHENS_LATITUDE = 37.9722;
-const double ATHENS_ALTITUDE = 70;
-double ATHENS_GEOPOS[3] = {ATHENS_LONGITUDE, ATHENS_LATITUDE, ATHENS_ALTITUDE};
-
-const double ATHENS_MEAN_TEMPERATURE = 17.5;
-const double ATHENS_MEAN_ATPRESSURE = 1013.25;
-const double ATHENS_MEAN_HUMIDITY = 40.0;
-
-double ATHENS_ATMOSPHERE[4] = {ATHENS_MEAN_ATPRESSURE, ATHENS_MEAN_TEMPERATURE, ATHENS_MEAN_HUMIDITY, 0};
-double VOID_OBSERVER[] = {36,1,0,0,0,0};
+#include "common.h"
+#include "athens.h"
 
 const double summerSolsticePoint = 90.0;
-
-void formatJulianDate(double jd, char * stringBuffer){
-    // Format Julian date as follows:
-    // Julian date as double, then day/month/year hour:min:sec
-    // All columns have fixed width
-    int jday, jmon, jyear, jhour, jmin, jsec;
-    double jut;
-
-    swe_revjul(jd, SE_GREG_CAL, &jyear, &jmon, &jday, &jut);
-    jhour = (int) jut;
-    jmin  = (int) ((jut - jhour) * 60);
-    jsec  = (int) (((jut - jhour) * 60 - jmin) * 60);
-    sprintf(stringBuffer, "% 16.6f %02d/%02d/%-5d %02d:%02d:%02d", jd, jday, jmon, jyear, jhour, jmin, jsec);
-}
 
 double getNextSolstice(double jd, bool topocentric_calc) {
     // Calculate the next Summer Solstice, starting from jd
@@ -64,25 +38,6 @@ double getNextSolstice(double jd, bool topocentric_calc) {
     }
 
     return solsticejd;
-}
-
-void calc_next_sunset(double tjd_ut, double *darr) {
-  // Calculate the next sunset for athens
-  // sets the "darr" array, as set by swe_heliacal_pheno_ut sweph function
-  char serr[AS_MAXCH];
-  int32 epheflag=SEFLG_SWIEPH | SE_BIT_DISC_CENTER;
-  int return_code;
-  char sun_name[AS_MAXCH];
-
-  swe_get_planet_name(SE_SUN, sun_name);
-
-  return_code=swe_heliacal_pheno_ut(tjd_ut, ATHENS_GEOPOS, ATHENS_ATMOSPHERE, VOID_OBSERVER, sun_name, SE_HELIACAL_SETTING, epheflag,
-    darr, serr);
-
-  if (return_code == ERR) {
-    // error action
-    printf("%s\n", serr);
-  }
 }
 
 double getApparentSolsticeDate(double jd_initial){
@@ -104,7 +59,7 @@ double getApparentSolsticeDate(double jd_initial){
   double jd;
   int i = 0;
   for(jd=jd_initial - DAYS_AROUND_SOLSTICE; jd<=jd_initial+DAYS_AROUND_SOLSTICE; jd=jd+0.5){
-    calc_next_sunset(jd, darr);
+    calc_next_sunset(jd, darr, true);
     jd=darr[22];
     consecutive_sunsets[i].sunset_time=darr[22];
     consecutive_sunsets[i].sun_azimuth=darr[5];
@@ -120,18 +75,6 @@ double getApparentSolsticeDate(double jd_initial){
 
   return 0.0;
 
-}
-
-int getAtticDayMidnight(double jd) {
-  // Get the midnight of the attic day for jd given.
-  // Since the new attic day begins at sunset, we calculate the next sunset, i.e. the end of the day to which given jd belongs.
-  // Then we cut the fractional part and we are left with the midnight of the same (contemporary) date.
-  double next_sunset_time;
-  double darr[50] = { 0 };
-  calc_next_sunset(jd, darr);
-  next_sunset_time=darr[22];
-
-  return (int) next_sunset_time;
 }
 
 int main()
