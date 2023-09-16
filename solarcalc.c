@@ -104,17 +104,27 @@ int main()
 
     printf("True Solstice (Universal)                                                  True Solstice (Athens)                                                    Apparent Solstice (Athens)\n");
     double current_jdt = startdt;
-    while(current_jdt< stopjdt) {
-      double true_solstice = getNextSolstice(current_jdt, false);
-      int true_solstice_attic_day = getAtticDayMidnight(true_solstice);
 
-      double true_solstice_athens = getNextSolstice(current_jdt, true);
-      int true_solstice_athens_attic_day = getAtticDayMidnight(true_solstice);
+    double true_solstice;
+    double true_solstice_athens;
+    double apparent_solstice;
+
+    int true_solstice_attic_day;
+    int true_solstice_athens_attic_day;
+    int apparent_solstice_attic_day;
+
+
+    while(current_jdt< stopjdt) {
+      true_solstice = getNextSolstice(current_jdt, false);
+      true_solstice_attic_day = getAtticDayMidnight(true_solstice);
+
+      true_solstice_athens = getNextSolstice(current_jdt, true);
+      true_solstice_athens_attic_day = getAtticDayMidnight(true_solstice);
 
       // Apparent solstice in Athens makes sense only if we calc by Athens topocentric solstice
-      double apparent_solstice = getApparentSolsticeDate(true_solstice_athens);
+      apparent_solstice = getApparentSolsticeDate(true_solstice_athens);
       // Apparent Solstice is already a sunset. So we just need the next midnight
-      int apparent_solstice_attic_day = (int) (apparent_solstice + 1.0);
+      apparent_solstice_attic_day = (int) (apparent_solstice + 1.0);
 
       formatJulianDate(true_solstice, true_solstice_repr);
       formatJulianDate(true_solstice_attic_day, true_solstice_atticday_repr);
