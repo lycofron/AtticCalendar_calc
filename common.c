@@ -74,10 +74,10 @@ double calc_next_sunset(double tjd_ut, bool disc_center) {
   return tret;
 }
 
-int getAtticDayMidnight(double jd) {
+double getAtticDayMidnight(double jd) {
   // Get the midnight of the attic day for jd given.
   // Since the new attic day begins at sunset, we calculate the next sunset, i.e. the end of the day to which given jd belongs.
   // Then we cut the fractional part and we are left with the midnight of the same (contemporary) date.
 
-  return (int) calc_next_sunset(jd, true);
+  return floor(calc_next_sunset(jd, true)) - 0.5;
 }

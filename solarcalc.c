@@ -118,18 +118,18 @@ int main()
     char apparent_solstice_atticday_repr[AS_MAXCH];
 
     printf("True Solstice (Universal)                                                  True Solstice (Athens)                                                    Apparent Solstice (Athens)\n");
-    double current_jdt = startdt;
+    double current_jdt;
 
     double true_solstice;
     double true_solstice_athens;
     double apparent_solstice;
 
-    int true_solstice_attic_day;
-    int true_solstice_athens_attic_day;
-    int apparent_solstice_attic_day;
+    double true_solstice_attic_day;
+    double true_solstice_athens_attic_day;
+    double apparent_solstice_attic_day;
 
 
-    while(current_jdt< stopjdt) {
+    for(current_jdt = startdt; current_jdt< stopjdt; current_jdt = current_jdt + 360) {
       true_solstice = getNextSolstice(current_jdt, false);
       true_solstice_attic_day = getAtticDayMidnight(true_solstice);
 
@@ -150,7 +150,6 @@ int main()
       printf("%s %s %s %s %s %s\n", true_solstice_repr, true_solstice_atticday_repr,
                                     true_solstice_athens_repr, true_solstice_athens_atticday_repr,
                                     apparent_solstice_repr, apparent_solstice_atticday_repr);
-      current_jdt = current_jdt + 360;
     }
 
   return OK;
