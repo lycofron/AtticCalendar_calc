@@ -117,7 +117,6 @@ int main()
     char true_solstice_athens_atticday_repr[AS_MAXCH];
     char apparent_solstice_atticday_repr[AS_MAXCH];
 
-    printf("True Solstice (Universal)                                                  True Solstice (Athens)                                                    Apparent Solstice (Athens)\n");
     double current_jdt;
 
     double true_solstice;
@@ -150,6 +149,8 @@ int main()
       printf("%s %s %s %s %s %s\n", true_solstice_repr, true_solstice_atticday_repr,
                                     true_solstice_athens_repr, true_solstice_athens_atticday_repr,
                                     apparent_solstice_repr, apparent_solstice_atticday_repr);
+
+      current_jdt = true_solstice;
     }
 
   return OK;
