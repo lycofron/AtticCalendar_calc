@@ -40,12 +40,22 @@ double getNextSolstice(double jd, bool topocentric_calc) {
     return solsticejd;
 }
 
+
+double get_sun_azimuth(double tjd){
+  int32 iflag = SEFLG_SWIEPH | SEFLG_TOPOCTR;
+  double xin[3], xaz[3];
+  char serr[AS_MAXCH];
+  swe_calc_wrap(tjd, SE_SUN, iflag, xin, serr);
+  swe_azalt(tjd, SE_ECL2HOR, ATHENS_GEOPOS, ATHENS_MEAN_ATPRESSURE, ATHENS_MEAN_TEMPERATURE, xin, xaz);
+  return xaz[0];
+}
+
+
 double getApparentSolsticeDate(double jd_initial){
   // The idea of Apparent Solstice is that, during solstice, the sun sets every day further to the north until it reaches the
   // farthest, and then returns to the south. Apparent Solstice is the day when it reaches its farthest point, and the attic day
   // that starts on that sunset (since in the attic calendar, days start at sunset) is the day of the solstice.
 
-  double darr[50] = { 0 };
   // investigate a zone of that many days before and after solstice.
   // It would have been set to 2, but because of a bug (?) in sweph, we need to cancel out the first calculation. So it is set to 3.
   const int DAYS_AROUND_SOLSTICE = 3;
@@ -58,15 +68,20 @@ double getApparentSolsticeDate(double jd_initial){
 
   double jd;
   int i = 0;
+
+  // char dateLabel[] = "Sun setting at:";
+  // char degreeLabel[] = "\tAzimuth: ";
+
   for(jd=jd_initial - DAYS_AROUND_SOLSTICE; jd<=jd_initial+DAYS_AROUND_SOLSTICE; jd=jd+0.5){
-    calc_next_sunset(jd, darr, true);
-    jd=darr[22];
-    consecutive_sunsets[i].sunset_time=darr[22];
-    consecutive_sunsets[i].sun_azimuth=darr[5];
+    jd = calc_next_sunset(jd, true);
+    consecutive_sunsets[i].sunset_time = jd;
+    consecutive_sunsets[i].sun_azimuth = get_sun_azimuth(jd);
+    // printJulianDate(dateLabel, consecutive_sunsets[i].sunset_time);
+    // printDegree(degreeLabel, consecutive_sunsets[i].sun_azimuth);
     // If we have already calculated 3 sunsets, start comparing
     if(i>=2) {
-      if (consecutive_sunsets[i-1].sun_azimuth < consecutive_sunsets[i].sun_azimuth &&
-          consecutive_sunsets[i-1].sun_azimuth < consecutive_sunsets[i-2].sun_azimuth) {
+      if (consecutive_sunsets[i-1].sun_azimuth > consecutive_sunsets[i].sun_azimuth &&
+          consecutive_sunsets[i-1].sun_azimuth > consecutive_sunsets[i-2].sun_azimuth) {
         return consecutive_sunsets[i].sunset_time;
       }
     }
@@ -87,7 +102,7 @@ int main()
     int startday = 1, startmon = 1, startyear = -3000;
     double startut = 0.0;
 
-    int stopday = 31, stopmon = 12, stopyear = 2999;
+    int stopday = 31, stopmon = 12, stopyear = 2998;
     double stoput = 0.0;
 
     double startdt = swe_julday(startyear,startmon,startday,startut,SE_GREG_CAL);

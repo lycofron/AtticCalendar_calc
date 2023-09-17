@@ -18,4 +18,4 @@ lunarcalc: lunarcalc.o
 	$(CC) $(OP) -o lunarcalc lunarcalc.c common.c athens.c -Llib/ -lswe -lm -ldl
 
 clean:
-	rm -f *.o solarcalc
+	rm -f *.o solarcalc lunarcalc

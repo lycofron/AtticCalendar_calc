@@ -5,7 +5,10 @@ extern char EPHE_PATH[];
 extern double VOID_OBSERVER[6];
 
 void formatJulianDate(double jd, char * stringBuffer);
-void calc_next_sunset(double tjd_ut, double *darr, bool disc_center);
+void printJulianDate(char * msg, double jd);
+void printDegree(char * msg, double deg_fl);
+void swe_calc_wrap(double tjd_ut, int32 ipl, int32 iflag, double *xx, char *serr);
+double calc_next_sunset(double tjd_ut, bool disc_center);
 int getAtticDayMidnight(double jd);
 
 #endif

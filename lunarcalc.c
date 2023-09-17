@@ -20,19 +20,6 @@ In detail, the program will scan in the range between startud and stoput and wil
 #include "common.h"
 #include "athens.h"
 
-void swe_calc_wrap(double tjd_ut, int32 ipl, int32 iflag, double *xx, char *serr) {
-  int32 iflgret = 0;
-  iflgret = swe_calc_ut(tjd_ut, ipl, iflag, xx, serr);
-  // if there is a problem, a negative value is returned and an error message is in serr.
-  if (iflgret < 0) {
-    printf("error: %s\n", serr);
-    // continue;
-  }
-  if (iflgret != iflag) {
-    printf("warning: iflgret != iflag. %s\n", serr);
-  }
-}
-
 double getClosestTrueNewMoon(double jd, bool topocentric_calc){
   int32 iflag = SEFLG_SWIEPH | SEFLG_SPEED;
   if(topocentric_calc){
