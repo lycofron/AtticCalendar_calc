@@ -46,17 +46,36 @@ double getClosestTrueNewMoon(double jd, bool topocentric_calc){
 
 }
 
+double getNextApparentNewMoon(double jd){
+  int32 iflgret = 0;
+  double dret[50];
+  char serr[AS_MAXCH];
+  char moon_name[20];
+  int32 iflag = SEFLG_SWIEPH | SEFLG_SPEED;
+
+  swe_get_planet_name(SE_MOON, moon_name);
+  iflgret = swe_heliacal_ut( jd, ATHENS_GEOPOS, ATHENS_ATMOSPHERE, VOID_OBSERVER, moon_name, SE_EVENING_FIRST, iflag, dret, serr);
+  if (iflgret < 0) {
+    printf("error: %s\n", serr);
+    // continue;
+  }
+
+  return dret[0];
+
+}
+
 int main()
 {
     // Initialization
     swe_set_ephe_path("./ephe/");
+    double const SYNODIC_MONTH = 29.53;
     // swe_set_topo(ATHENS_LONGITUDE, ATHENS_LATITUDE, ATHENS_ALTITUDE);
 
     /* Parameters */
-    int startday = 1, startmon = 1, startyear = 2023;
+    int startday = 1, startmon = 1, startyear = -3000;
     double startut = 0.0;
 
-    int stopday = 31, stopmon = 12, stopyear = 2024;
+    int stopday = 31, stopmon = 12, stopyear = 2998;
     double stoput = 0.0;
 
     double startdt = swe_julday(startyear,startmon,startday,startut,SE_GREG_CAL);
@@ -64,32 +83,35 @@ int main()
     double stopjdt = swe_julday(stopyear,stopmon,stopday,stoput,SE_GREG_CAL);
     stopjdt = stopjdt + swe_deltat(stopjdt);
 
-    double new_moon_date;
-    char new_moon_date_repr[AS_MAXCH];
+    double new_moon_date, new_moon_date_attic_day;
+    char new_moon_date_repr[AS_MAXCH], new_moon_date_attic_day_repr[AS_MAXCH];
 
-    bool do_init = true;
-    double first_new_moon = 0.0;
-    int new_moons_calced = 0;
+    double new_moon_athens_date, new_moon_athens_date_attic_day;
+    char new_moon_athens_date_repr[AS_MAXCH], new_moon_athens_date_attic_day_repr[AS_MAXCH];
+
+    double noumenia_date, noumenia_date_attic_day;
+    char noumenia_date_repr[AS_MAXCH], noumenia_date_attic_day_repr[AS_MAXCH];
 
     double current_jdt = startdt;
 
-    while(current_jdt < stopjdt){
+    for(current_jdt = startdt; current_jdt< stopjdt; current_jdt = current_jdt + SYNODIC_MONTH) {
       new_moon_date = getClosestTrueNewMoon(current_jdt, false);
+      new_moon_date_attic_day = getAtticDayMidnight(new_moon_date);
+      new_moon_athens_date = getClosestTrueNewMoon(current_jdt, true);
+      new_moon_athens_date_attic_day = getAtticDayMidnight(new_moon_athens_date);
+      noumenia_date = getNextApparentNewMoon(new_moon_date);
+      //No need for complex calculations. Noumenia is close after sunset, therefore, attic day is always following Midnight.
+      noumenia_date_attic_day = floor(noumenia_date) + 0.5;
+
       formatJulianDate(new_moon_date, new_moon_date_repr);
-      printf("%s\n", new_moon_date_repr);
-      if (do_init) {
-        first_new_moon = new_moon_date;
-        current_jdt = current_jdt + 29.53;
-        do_init = false;
-      } else {
-        new_moons_calced++;
-        current_jdt = current_jdt + (new_moon_date - first_new_moon) / new_moons_calced;
-        // printf("%f\n", (new_moon_date - first_new_moon) / new_moons_calced);
-      }
+      formatJulianDate(new_moon_date_attic_day, new_moon_date_attic_day_repr);
+      formatJulianDate(new_moon_athens_date, new_moon_athens_date_repr);
+      formatJulianDate(new_moon_athens_date_attic_day, new_moon_athens_date_attic_day_repr);
+      formatJulianDate(noumenia_date, noumenia_date_repr);
+      formatJulianDate(noumenia_date_attic_day, noumenia_date_attic_day_repr);
+      printf("%s %s %s %s %s %s\n", new_moon_date_repr, new_moon_date_attic_day_repr, new_moon_athens_date_repr,
+             new_moon_athens_date_attic_day_repr, noumenia_date_repr, noumenia_date_attic_day_repr);
     }
-
-
-
 
   return OK;
 }
