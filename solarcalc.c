@@ -139,7 +139,7 @@ int main()
       // Apparent solstice in Athens makes sense only if we calc by Athens topocentric solstice
       apparent_solstice = getApparentSolsticeDate(true_solstice_athens);
       // Apparent Solstice is already a sunset. So we just need the next midnight
-      apparent_solstice_attic_day = (int) (apparent_solstice + 1.0);
+      apparent_solstice_attic_day = floor(apparent_solstice) + 0.5;
 
       formatJulianDate(true_solstice, true_solstice_repr);
       formatJulianDate(true_solstice_attic_day, true_solstice_atticday_repr);
