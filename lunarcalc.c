@@ -2,16 +2,16 @@
 
 lunarcalc.c
 
-The purpose of this program is to find all solstices in the years we are interested in.
+The purpose of this program is to calculate all new moons and noumeniae (apparrent full moon) in the years we are interested in.
 
-In detail, the program will scan in the range between startud and stoput and will output, for each year julian dates and dates for:
+In detail, the program will scan in the range between startut and stoput and will output, for each year julian dates and dates for:
 
-* Universal solstice (ingression of Sun at Cancer)
-* Midnight of attic day when topocentric solstice occurs.
-* Topocentric solstice (Athens)
-* Midnight of attic day when topocentric solstice occurs.
-* Apparent solstice (topocentric - Athens)
-* Midnight of attic day when topocentric apparent solstice occurs.
+* Astronomical new moon
+* Midnight of attic day when astronomical new moon occurs.
+* Topocentric astronomical new moon (calculated for Athens)
+* Midnight of attic day when topocentric astronomical new moon occurs.
+* Noumenia (when the new moon appears first time in the night sky) calculated for Athens.
+* Midnight of attic day when topocentric noumenia occurs.
 
 ***********************************************************************************************************************************/
 #include <math.h>
