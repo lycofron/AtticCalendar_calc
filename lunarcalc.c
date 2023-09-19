@@ -111,6 +111,7 @@ int main()
       formatJulianDate(noumenia_date_attic_day, noumenia_date_attic_day_repr);
       printf("%s %s %s %s %s %s\n", new_moon_date_repr, new_moon_date_attic_day_repr, new_moon_athens_date_repr,
              new_moon_athens_date_attic_day_repr, noumenia_date_repr, noumenia_date_attic_day_repr);
+      current_jdt = new_moon_date;
     }
 
   return OK;
