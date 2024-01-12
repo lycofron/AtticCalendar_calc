@@ -52,7 +52,7 @@ void swe_calc_wrap(double tjd_ut, int32 ipl, int32 iflag, double *xx, char *serr
   }
 }
 
-double calc_next_sunset(double tjd_ut, bool disc_center) {
+double calc_next_sun_something(double tjd_ut, bool disc_center, int what_to_calc) {
   // Calculate the next sunset for athens
   // sets the "darr" array, as set by swe_heliacal_pheno_ut sweph function
   int return_code;
@@ -63,7 +63,7 @@ double calc_next_sunset(double tjd_ut, bool disc_center) {
   char serr[AS_MAXCH];
   double tret;
 
-  return_code = swe_rise_trans(tjd_ut, SE_SUN, NULL, epheflag, SE_CALC_SET, ATHENS_GEOPOS, ATHENS_MEAN_ATPRESSURE,
+  return_code = swe_rise_trans(tjd_ut, SE_SUN, NULL, epheflag, what_to_calc, ATHENS_GEOPOS, ATHENS_MEAN_ATPRESSURE,
                                ATHENS_MEAN_TEMPERATURE, &tret, serr);
 
   if (return_code == ERR) {
@@ -73,6 +73,15 @@ double calc_next_sunset(double tjd_ut, bool disc_center) {
 
   return tret;
 }
+
+double calc_next_sunrise(double tjd_ut, bool disc_center) {
+  return calc_next_sun_something(tjd_ut, disc_center, SE_CALC_RISE);
+}
+
+double calc_next_sunset(double tjd_ut, bool disc_center) {
+  return calc_next_sun_something(tjd_ut, disc_center, SE_CALC_SET);
+}
+
 
 double getAtticDayMidnight(double jd) {
   // Get the midnight of the attic day for jd given.

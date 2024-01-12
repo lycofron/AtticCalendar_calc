@@ -9,6 +9,7 @@ void printJulianDate(char * msg, double jd);
 void printDegree(char * msg, double deg_fl);
 void swe_calc_wrap(double tjd_ut, int32 ipl, int32 iflag, double *xx, char *serr);
 double calc_next_sunset(double tjd_ut, bool disc_center);
+double calc_next_sunrise(double tjd_ut, bool disc_center);
 double getAtticDayMidnight(double jd);
 
 #endif
